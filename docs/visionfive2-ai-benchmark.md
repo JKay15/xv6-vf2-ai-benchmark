@@ -14,15 +14,10 @@ The benchmark is intentionally split into three stages. If these stages are mixe
 
 The benchmark has two different source identities and they must not be mixed:
 
-1. Official Stage 1 starter:
+1. Stage 1 benchmark starter:
    - repo: `https://gitlab.eduxiji.net/pku2301210666/xv6-k210-template.git`
    - common framework branch: `master`
    - common framework commit: `d740928`
-   - official remaining-part starter branches:
-     - `part4-scheduler` at `6d7ede9`
-     - `part5-mem` at `c93a75a`
-     - `part6-page-replace` at `0db77e0`
-     - `part8-sem` at `79ea868`
 2. Solved reference outcome:
    - repo: `https://gitlab.eduxiji.net/pku2000012515/xjk_2000012515_os.git`
    - branch: `main`
@@ -30,6 +25,8 @@ The benchmark has two different source identities and they must not be mixed:
    - commit: `4c3c4b9`
 
 The solved repository is not a Stage 1 input. It is a completed outcome and should only be used as a reference outside blind evaluation.
+
+The course PDFs do mention part-specific starter branches for Part 4/5/6/8. This benchmark intentionally does not distribute those branches and instead standardizes on one shared `master` tarball.
 
 The upstream coursework codebase is an `xv6-k210` tree that currently supports `qemu` and `k210`, not VisionFive 2. This matters because Stage 2 and Stage 3 are not “flash the existing image to VF2”; they are a real board port.
 
@@ -43,8 +40,7 @@ Goal:
 
 Input:
 
-- The exact official starter branch for the part being evaluated.
-- Or, if using a convenience package, the template `master` plus the official starter bundles.
+- The exact shared Stage 1 tarball exported from template `master`.
 - The exact course PDFs and PPT.
 - The exact local and platform test information.
 
@@ -64,12 +60,8 @@ Secondary metrics:
 
 Important rule:
 
-- Stage 1 should be run as four course-faithful subtasks unless there is a strong reason not to:
-  - Part 4 from `part4-scheduler`
-  - Part 5 from `part5-mem`
-  - Part 6 from `part6-page-replace`
-  - Part 8 from `part8-sem`
 - Do not give agents the solved `4c3c4b9` repository as their blind starting point.
+- Use the same shared `master` tarball for every agent in Stage 1.
 
 ### Stage 2: Board Bring-up on VisionFive 2
 
@@ -115,18 +107,10 @@ These assets must be frozen before any agent starts. Every agent gets the same p
 
 Provide:
 
-1. The common framework package:
+Provide:
+
+1. The shared framework tarball:
    - `stage1-common-src-xv6-k210-template-master-d740928.tar.gz`
-   - `stage1-common-src-xv6-k210-template-master-d740928.bundle`
-2. The official starter-branch packages:
-   - `stage1-starter-xv6-k210-template-part4-scheduler-6d7ede9.tar.gz`
-   - `stage1-starter-xv6-k210-template-part4-scheduler-6d7ede9.bundle`
-   - `stage1-starter-xv6-k210-template-part5-mem-c93a75a.tar.gz`
-   - `stage1-starter-xv6-k210-template-part5-mem-c93a75a.bundle`
-   - `stage1-starter-xv6-k210-template-part6-page-replace-0db77e0.tar.gz`
-   - `stage1-starter-xv6-k210-template-part6-page-replace-0db77e0.bundle`
-   - `stage1-starter-xv6-k210-template-part8-sem-79ea868.tar.gz`
-   - `stage1-starter-xv6-k210-template-part8-sem-79ea868.bundle`
 
 Do not package the solved `4c3c4b9` repository as a Stage 1 baseline.
 
@@ -511,7 +495,7 @@ This avoids spending most of the board budget on agents that never reached even 
 Before starting any agent, confirm:
 
 - Baseline repo snapshot exists.
-- Official starter-branch bundles exist.
+- Shared Stage 1 source tarball exists.
 - Course docs bundle exists.
 - Local testsuite exists.
 - VF2 board and power supply are stable.

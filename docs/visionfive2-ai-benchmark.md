@@ -12,14 +12,26 @@ The benchmark is intentionally split into three stages. If these stages are mixe
 
 ## 2. Scope
 
-The benchmark target is the repository:
+The benchmark has two different source identities and they must not be mixed:
 
-- Repo URL: `https://gitlab.eduxiji.net/pku2000012515/xjk_2000012515_os.git`
-- Baseline branch: `main`
-- Baseline tag: `part4-8-all-pass`
-- Baseline commit: `4c3c4b9`
+1. Official Stage 1 starter:
+   - repo: `https://gitlab.eduxiji.net/pku2301210666/xv6-k210-template.git`
+   - common framework branch: `master`
+   - common framework commit: `d740928`
+   - official remaining-part starter branches:
+     - `part4-scheduler` at `6d7ede9`
+     - `part5-mem` at `c93a75a`
+     - `part6-page-replace` at `0db77e0`
+     - `part8-sem` at `79ea868`
+2. Solved reference outcome:
+   - repo: `https://gitlab.eduxiji.net/pku2000012515/xjk_2000012515_os.git`
+   - branch: `main`
+   - tag: `part4-8-all-pass`
+   - commit: `4c3c4b9`
 
-The baseline codebase is an `xv6-k210` tree that currently supports `qemu` and `k210`, not VisionFive 2. This matters because Stage 2 and Stage 3 are not “flash the existing image to VF2”; they are a real board port.
+The solved repository is not a Stage 1 input. It is a completed outcome and should only be used as a reference outside blind evaluation.
+
+The upstream coursework codebase is an `xv6-k210` tree that currently supports `qemu` and `k210`, not VisionFive 2. This matters because Stage 2 and Stage 3 are not “flash the existing image to VF2”; they are a real board port.
 
 ## 3. Stage Design
 
@@ -31,7 +43,8 @@ Goal:
 
 Input:
 
-- The exact baseline repo at commit `4c3c4b9`.
+- The exact official starter branch for the part being evaluated.
+- Or, if using a convenience package, the template `master` plus the official starter bundles.
 - The exact course PDFs and PPT.
 - The exact local and platform test information.
 
@@ -48,6 +61,15 @@ Secondary metrics:
 - Number of user-agent rounds.
 - Time to first passing submission.
 - Number of regressions introduced while fixing other parts.
+
+Important rule:
+
+- Stage 1 should be run as four course-faithful subtasks unless there is a strong reason not to:
+  - Part 4 from `part4-scheduler`
+  - Part 5 from `part5-mem`
+  - Part 6 from `part6-page-replace`
+  - Part 8 from `part8-sem`
+- Do not give agents the solved `4c3c4b9` repository as their blind starting point.
 
 ### Stage 2: Board Bring-up on VisionFive 2
 
@@ -91,18 +113,22 @@ These assets must be frozen before any agent starts. Every agent gets the same p
 
 ### 4.1 Baseline source package
 
-Provide one of:
+Provide:
 
-1. A Git URL plus the fixed commit:
-   - `https://gitlab.eduxiji.net/pku2000012515/xjk_2000012515_os.git`
-   - commit `4c3c4b9`
-2. A tarball exported from that exact commit.
-3. A Git bundle exported from that exact commit.
+1. The common framework package:
+   - `stage1-common-src-xv6-k210-template-master-d740928.tar.gz`
+   - `stage1-common-src-xv6-k210-template-master-d740928.bundle`
+2. The official starter-branch packages:
+   - `stage1-starter-xv6-k210-template-part4-scheduler-6d7ede9.tar.gz`
+   - `stage1-starter-xv6-k210-template-part4-scheduler-6d7ede9.bundle`
+   - `stage1-starter-xv6-k210-template-part5-mem-c93a75a.tar.gz`
+   - `stage1-starter-xv6-k210-template-part5-mem-c93a75a.bundle`
+   - `stage1-starter-xv6-k210-template-part6-page-replace-0db77e0.tar.gz`
+   - `stage1-starter-xv6-k210-template-part6-page-replace-0db77e0.bundle`
+   - `stage1-starter-xv6-k210-template-part8-sem-79ea868.tar.gz`
+   - `stage1-starter-xv6-k210-template-part8-sem-79ea868.bundle`
 
-Recommended packaging:
-
-- `xv6-k210-baseline-4c3c4b9.tar.gz`
-- `xv6-k210-baseline-4c3c4b9.bundle`
+Do not package the solved `4c3c4b9` repository as a Stage 1 baseline.
 
 ### 4.2 Course documents
 
@@ -114,7 +140,9 @@ Provide these exact local documents:
 
 Also include the repository’s own documentation directory:
 
-- `/home/ubuntu/xv6-k210-submit-20260305/doc`
+- none required from the template repo itself
+
+Do not include the solved repository's `doc/` directory in blind Stage 1 if it contains post-hoc explanations or solution-like material.
 
 ### 4.3 Test assets for Stage 1
 
@@ -122,8 +150,8 @@ Provide:
 
 - The syscall testsuite tree:
   - `/home/ubuntu/testsuits-for-oskernel/riscv-syscalls-testing`
-- The exact local test runner wrapper if used:
-  - `/home/ubuntu/xv6-k210-submit-20260305/run-local-tests.sh`
+
+Use this as a reproducibility aid for the already-present syscall and filesystem layer. It should not be confused with the remaining unfinished kernel tasks.
 
 ### 4.4 VisionFive 2 board package for Stage 2 and 3
 
@@ -483,6 +511,7 @@ This avoids spending most of the board budget on agents that never reached even 
 Before starting any agent, confirm:
 
 - Baseline repo snapshot exists.
+- Official starter-branch bundles exist.
 - Course docs bundle exists.
 - Local testsuite exists.
 - VF2 board and power supply are stable.
@@ -492,4 +521,3 @@ Before starting any agent, confirm:
 - TFTP or SD deployment path is tested.
 - Boot mode switch positions are documented.
 - A single operator protocol is frozen.
-
